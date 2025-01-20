@@ -1,10 +1,11 @@
 const { Router } = require("express");
 const creatorRouter = Router();
-const { creatorModel } = require("../db");
-const USER_CREATOR_PASSWORD = "admin123";
+const { creatorModel, courseModel } = require("../db");
+const { CREATOR_JWT_PASSWORD } = require("../config");
 const { z } = require("zod");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const { creatorMiddleware } = require("../middleware/creatorMiddleware");
 
 creatorRouter.post("/signup", async function (req, res) {
   // input validation using zod
@@ -78,7 +79,7 @@ creatorRouter.post("/signin", async function (req, res) {
       {
         id: user._id,
       },
-      USER_CREATOR_PASSWORD
+      CREATOR_JWT_PASSWORD
     );
 
     //Respond with the token
@@ -95,9 +96,22 @@ creatorRouter.post("/signin", async function (req, res) {
 });
 
 // course creation
-creatorRouter.post("/course", function (req, res) {
+creatorRouter.post("/course", creatorMiddleware, async function (req, res) {
+  const adminId = req.UserId;
+
+  const { title, description, price, imageURL, creatorId } = req.body;
+
+  const course = await courseModel.create({
+    title: title,
+    description: description,
+    price: price,
+    imageURL: imageURL, // creating a web3 saas in 6hrs (how to upload an image directly)
+    creatorId: adminId,
+  });
+
   res.json({
-    message: "course creation",
+    message: "Course created",
+    courseId: course._id,
   });
 });
 
