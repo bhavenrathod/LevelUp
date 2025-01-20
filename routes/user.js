@@ -2,6 +2,8 @@ const { Router } = require("express"); // destructure the object here
 const { userModel } = require("../db");
 const { z } = require("zod");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const USER_JWT_PASSWORD = "user123";
 
 const userRouter = Router(); // use the function here
 
@@ -44,7 +46,7 @@ userRouter.post("/signup", async function (req, res) {
       password: hashedPassword,
     });
     return res.json({
-      message: "Signed up successfully",
+      message: "Signed Up",
     });
   } catch (error) {
     console.log("Error in DB");
@@ -55,10 +57,44 @@ userRouter.post("/signup", async function (req, res) {
 });
 
 // signin endpoint
-userRouter.post("/signin", function (req, res) {
-  res.json({
-    message: "user signin success",
-  });
+userRouter.post("/signin", async function (req, res) {
+  const { email, password } = req.body;
+
+  try {
+    const user = await userModel.findOne({ email: email });
+    if (!user) {
+      return res.status(403).json({
+        message: "Incorrect Credentials",
+      });
+    }
+
+    // Compare passwords
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(403).json({
+        message: "Incorrect Credentials",
+      });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      {
+        id: user._id,
+      },
+      USER_JWT_PASSWORD
+    );
+
+    //Respond with the token
+    return res.json({
+      message: "Signed In",
+      token: token,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Error occurred",
+      error: error.message,
+    });
+  }
 });
 
 // display the user's purchased courses
