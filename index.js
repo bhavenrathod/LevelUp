@@ -5,7 +5,7 @@ const { courseRouter } = require("./routes/course");
 const { creatorRouter } = require("./routes/creator");
 const app = express();
 const port = 3000;
-
+require("dotenv").config;
 app.use(express.json());
 
 app.use("/api/v1/user", userRouter);

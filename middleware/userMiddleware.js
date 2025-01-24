@@ -1,9 +1,9 @@
 const jwt = require("jsonwebtoken");
-const { USER_JWT_PASSWORD } = require("../config");
+// const { USER_JWT_PASSWORD } = require("../config");
 
 function userMiddleware(req, res, next) {
   const token = req.headers.token;
-  const decoded = jwt.verify(token, USER_JWT_PASSWORD);
+  const decoded = jwt.verify(token, process.env.USER_JWT_PASSWORD);
 
   if (decoded) {
     req.userId = decoded.id;

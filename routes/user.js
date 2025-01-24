@@ -3,7 +3,7 @@ const { userModel } = require("../db");
 const { z } = require("zod");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { USER_JWT_PASSWORD } = require("../config");
+// const { USER_JWT_PASSWORD } = require("../config");
 
 const userRouter = Router(); // use the function here
 
@@ -81,7 +81,7 @@ userRouter.post("/signin", async function (req, res) {
       {
         id: user._id,
       },
-      USER_JWT_PASSWORD
+      process.env.USER_JWT_PASSWORD
     );
 
     //Respond with the token

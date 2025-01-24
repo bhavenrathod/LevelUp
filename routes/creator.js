@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const creatorRouter = Router();
 const { creatorModel, courseModel } = require("../db");
-const { CREATOR_JWT_PASSWORD } = require("../config");
+// const { CREATOR_JWT_PASSWORD } = require("../config");
 const { z } = require("zod");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
@@ -79,7 +79,7 @@ creatorRouter.post("/signin", async function (req, res) {
       {
         id: user._id,
       },
-      CREATOR_JWT_PASSWORD
+      process.env.CREATOR_JWT_PASSWORD
     );
 
     //Respond with the token
