@@ -1,4 +1,4 @@
-const USER_JWT_PASSWORD = proces.env.USER_JWT_PASSWORD;
+const USER_JWT_PASSWORD = process.env.USER_JWT_PASSWORD;
 const CREATOR_JWT_PASSWORD = process.env.CREATOR_JWT_PASSWORD;
 
 module.exports = {
