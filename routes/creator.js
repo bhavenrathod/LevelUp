@@ -97,7 +97,7 @@ creatorRouter.post("/signin", async function (req, res) {
 
 // course creation
 creatorRouter.post("/course", creatorMiddleware, async function (req, res) {
-  const adminId = req.UserId;
+  const adminId = req.userId;
 
   const { title, description, price, imageURL, creatorId } = req.body;
 
@@ -116,16 +116,41 @@ creatorRouter.post("/course", creatorMiddleware, async function (req, res) {
 });
 
 // update course
-creatorRouter.put("/course", function (req, res) {
+creatorRouter.put("/course", creatorMiddleware, async function (req, res) {
+  const adminId = req.userId;
+
+  const { title, description, price, imageURL, courseId } = req.body;
+
+  const course = await courseModel.updateOne(
+    {
+      _id: courseId,
+      creatorId: adminId,
+    },
+    {
+      title: title,
+      description: description,
+      price: price,
+      imageURL: imageURL, // creating a web3 saas in 6hrs (how to upload an image directly)
+    }
+  );
+
   res.json({
-    message: "course updation",
+    message: "Course updated",
+    courseId: course._id,
   });
 });
 
 // get all course
-creatorRouter.get("/course/all", function (req, res) {
+creatorRouter.get("/course/all", creatorMiddleware, async function (req, res) {
+  const adminId = req.userId;
+
+  const courses = await courseModel.find({
+    creatorId: adminId,
+  });
+
   res.json({
-    message: "course creation",
+    message: "Courses shown",
+    courses,
   });
 });
 
