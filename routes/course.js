@@ -13,7 +13,7 @@ courseRouter.post("/purchase", userMiddleware, async function (req, res) {
     courseId,
   });
   res.json({
-    message: "You have  purchased the course",
+    message: "You have purchased the course",
   });
 });
 

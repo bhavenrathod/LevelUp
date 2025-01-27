@@ -1,6 +1,4 @@
 const { Schema, default: mongoose } = require("mongoose");
-const user = require("./routes/user");
-const course = require("./routes/course");
 const ObjectId = mongoose.ObjectId;
 
 require("dotenv").config();
@@ -28,8 +26,8 @@ const courseSchema = new Schema({
 });
 
 const purchaseSchema = new Schema({
+  userId: ObjectId,
   courseId: ObjectId,
-  creatorId: ObjectId,
 });
 
 // corresponding Data models
